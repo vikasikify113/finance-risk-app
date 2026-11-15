@@ -19,7 +19,7 @@ finance-risk-app/
 ├── README.md
 └── *.ipynb             # Colab notebook with the full analysis
 ```
-
+**Live demo:** https://your-app-name.streamlit.app
 ## Run it on your computer (localhost)
 
 **Requirements:** Python 3.9 or newer, Git, and an internet connection (stock prices are downloaded live from Yahoo Finance).
