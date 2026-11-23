@@ -12,12 +12,17 @@ A machine learning mini project on 15 NSE-listed stocks (2020 to 2026). It tests
 - **Dashboard:** price and risk metrics, volatility forecast, and backtest for each stock.
 
 ## Project structure
-```
+```text
 finance-risk-app/
-├── app.py              # Streamlit dashboard
-├── requirements.txt    # Python dependencies
-├── README.md
-└── *.ipynb             # Colab notebook with the full analysis
+├── finance-risk-app.py  # Existing Streamlit dashboard
+├── pages/
+│   ├── 1_Dataset_Analysis.py
+│   └── 2_Live_Market.py
+├── features.py
+├── train.py
+├── data/NIFTY50_demo_sample_5minute.csv
+├── requirements.txt
+└── README.md
 ```
 **Live demo:** https://your-app-name.streamlit.app
 ## Run it on your computer (localhost)
@@ -50,7 +55,7 @@ python -m pip install -r requirements.txt
 
 **4. Start the dashboard**
 ```
-python -m streamlit run app.py
+python -m streamlit run finance-risk-app.py
 ```
 
 **5. Open the app.** Your browser opens automatically. If it doesn't, go to http://localhost:8501.
@@ -65,17 +70,23 @@ To stop the app, press `Ctrl+C` in the terminal.
 
 The first load of each stock takes 10 to 20 seconds (download and model training). After that it is cached.
 
+## New analysis pages
+
+The Streamlit sidebar now includes **Dataset Analysis** and **Live Market** pages. Dataset Analysis uses the small five-session Nifty 50 sample CSV in `data/`; Live Market downloads five-minute quotes from Yahoo Finance and refreshes every five minutes. The live page does not depend on model artifacts. The sample is for demonstrating the data format, not for drawing statistically reliable conclusions.
+
+To train the optional intraday model locally, add the full historical `NIFTYMS400_MQ100_5minute.csv` to `data/` and run `python train.py`. This creates files in `models/`; the dataset page shows model results when those files are available. The included five-session sample is not intended for training.
+
 ## Troubleshooting
 | Problem | Fix |
 |---|---|
-| `streamlit` is not recognized | Use `python -m streamlit run app.py` |
-| `python` is not recognized (Windows) | Use `py` instead, for example `py -m streamlit run app.py` |
-| "File does not exist: app.py" | Run the command from inside the `finance-risk-app` folder |
-| Port 8501 already in use | `python -m streamlit run app.py --server.port 8502` |
+| `streamlit` is not recognized | Use `python -m streamlit run finance-risk-app.py` |
+| `python` is not recognized (Windows) | Use `py` instead, for example `py -m streamlit run finance-risk-app.py` |
+| "File does not exist: finance-risk-app.py" | Run the command from inside the `finance-risk-app` folder |
+| Port 8501 already in use | `python -m streamlit run finance-risk-app.py --server.port 8502` |
 | Empty chart or "Could not download data" | Check your internet connection and try again, Yahoo Finance sometimes rate-limits |
 
-## Run the full analysis (notebook)
-Open the `.ipynb` file in [Google Colab](https://colab.research.google.com) (File > Upload notebook) and run the cells from top to bottom.
+## Notebook analysis
+The notebook mentioned in older documentation is not included in the current repository.
 
 ## Tech stack
 Python, pandas, NumPy, scikit-learn, yfinance, Matplotlib, Streamlit, Google Colab
