@@ -187,10 +187,12 @@ if prompt:
                     timeout=60,
                     max_retries=2,
                 )
+                # xAI's Responses API accepts system instructions as a system
+                # message in `input` (rather than the OpenAI `instructions` field).
                 response = client.responses.create(
                     model=model,
-                    instructions=instructions,
-                    input=history,
+                    input=[{"role": "system", "content": instructions}, *history],
+                    store=False,
                 )
                 reply = response.output_text or "I could not generate a response. Please try again."
                 st.markdown(reply)
@@ -198,5 +200,12 @@ if prompt:
                     st.link_button(f"View {symbol} on NSE India", nse_quote_url(symbol))
                 st.session_state.market_chat.append({"role": "assistant", "content": reply})
             except Exception as exc:
-                st.error(f"The Grok request failed: {exc}")
+                detail = getattr(exc, "body", None) or getattr(exc, "message", None)
+                error_response = getattr(exc, "response", None)
+                if error_response is not None:
+                    try:
+                        detail = error_response.json()
+                    except Exception:
+                        detail = getattr(error_response, "text", None) or detail
+                st.error(f"The Grok request failed: {detail or exc}")
 
