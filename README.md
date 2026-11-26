@@ -17,7 +17,9 @@ finance-risk-app/
 ├── finance-risk-app.py  # Existing Streamlit dashboard
 ├── pages/
 │   ├── 1_Dataset_Analysis.py
-│   └── 2_Live_Market.py
+│   ├── 2_Live_Market.py
+│   ├── 3_Market_Chatbot.py
+│   └── 4_ARIMA_Forecast.py
 ├── features.py
 ├── train.py
 ├── data/NIFTY50_demo_sample_5minute.csv
@@ -72,7 +74,23 @@ The first load of each stock takes 10 to 20 seconds (download and model training
 
 ## New analysis pages
 
-The Streamlit sidebar now includes **Dataset Analysis** and **Live Market** pages. Dataset Analysis uses the small five-session Nifty 50 sample CSV in `data/`; Live Market downloads five-minute quotes from Yahoo Finance and refreshes every five minutes. The live page does not depend on model artifacts. The sample is for demonstrating the data format, not for drawing statistically reliable conclusions.
+The Streamlit sidebar includes **Dataset Analysis**, **Live Market**, **Market Chatbot**, and **ARIMA / SARIMA Forecast** pages. Dataset Analysis uses the small five-session Nifty 50 sample CSV in `data/`; Live Market downloads five-minute quotes from Yahoo Finance and refreshes every five minutes. Both market pages include a link to NSE India. The sample is for demonstrating the data format, not for drawing statistically reliable conclusions.
+
+### Market chatbot setup
+
+The chatbot uses the xAI Grok API through its OpenAI-compatible Python client and attempts to fetch current equity/index quotes from NSE's public endpoints. The xAI API supports the OpenAI-compatible interface and recommends the Responses API for new integrations. NSE may rate-limit or block automated requests; when that happens, the chatbot reports that it could not verify the quote and links to NSE's website. Quote timing and availability are controlled by the source.
+
+For local development, create `.streamlit/secrets.toml` and add:
+
+```toml
+XAI_API_KEY = "your-xai-api-key"
+```
+
+Keep this file private and do not commit it. On Streamlit Community Cloud, add `XAI_API_KEY` in the app's **Settings → Secrets**. xAI API usage may incur charges. Without a configured key, the chatbot page loads but Grok replies are disabled.
+
+### ARIMA / SARIMA forecast
+
+The forecast page downloads daily adjusted prices from Yahoo Finance. Choose one of the listed NSE stocks or enter another Yahoo Finance symbol such as `ADANIENT.NS`. ARIMA uses the selected `(p, d, q)` order; SARIMA also uses a five-session seasonal pattern for this demonstration. Forecasts are estimates based only on past prices, and are not investment advice.
 
 To train the optional intraday model locally, add the full historical `NIFTYMS400_MQ100_5minute.csv` to `data/` and run `python train.py`. This creates files in `models/`; the dataset page shows model results when those files are available. The included five-session sample is not intended for training.
 

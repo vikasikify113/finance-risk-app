@@ -9,6 +9,10 @@ st.caption(
     "Five-minute prices from Yahoo Finance. Quotes can be delayed; this page refreshes every five minutes. "
     "Indicators describe recent price action and are not trading recommendations."
 )
+st.link_button(
+    "Open NSE India live equity market",
+    "https://www.nseindia.com/market-data/live-equity-market",
+)
 
 SYMBOLS = {
     "Nifty 50": "^NSEI",
