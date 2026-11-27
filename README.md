@@ -78,15 +78,17 @@ The Streamlit sidebar includes **Dataset Analysis**, **Live Market**, **Market C
 
 ### Market chatbot setup
 
-The chatbot uses the xAI Grok API through its OpenAI-compatible Python client and attempts to fetch current equity/index quotes from NSE's public endpoints. The xAI API supports the OpenAI-compatible interface and recommends the Responses API for new integrations. NSE may rate-limit or block automated requests; when that happens, the chatbot reports that it could not verify the quote and links to NSE's website. Quote timing and availability are controlled by the source.
+The chatbot offers two providers: local Ollama and the Gemini API. It also attempts to fetch equity/index quotes from NSE's public endpoints. NSE may rate-limit or block automated requests; when that happens, the chatbot reports that it could not verify the quote and links to NSE's website. Quote timing and availability are controlled by the source.
 
-For local development, create `.streamlit/secrets.toml` and add:
+Install [Ollama](https://ollama.com/download), then in PowerShell download and start the Qwen model:
 
-```toml
-XAI_API_KEY = "your-xai-api-key"
+```powershell
+ollama run qwen3.5:4b
 ```
 
-Keep this file private and do not commit it. On Streamlit Community Cloud, add `XAI_API_KEY` in the app's **Settings → Secrets**. xAI API usage may incur charges. Without a configured key, the chatbot page loads but Grok replies are disabled.
+Keep Ollama running, open another terminal in the project, and start Streamlit with `python -m streamlit run finance-risk-app.py`. On the Market Chatbot page, select **Ollama (local)**, use **Check Ollama connection**, and make sure the model name is `qwen3.5:4b`. Ollama runs on the same computer as Streamlit; the Streamlit Community Cloud app cannot access Ollama running on your PC.
+
+To use Gemini, create a key in [Google AI Studio](https://aistudio.google.com/api-keys). For local use, add `GEMINI_API_KEY = "your-key"` to `.streamlit/secrets.toml`. For Streamlit Community Cloud, add the same `GEMINI_API_KEY` setting under **App → Settings → Secrets**. Keep the key private and do not commit it. Select **Gemini API** on the chatbot page. Gemini free-tier quotas and model availability vary; check [current pricing and limits](https://ai.google.dev/gemini-api/docs/pricing/). Google indicates that free-tier prompts may be used to improve its products, so avoid sending private or sensitive information.
 
 ### ARIMA / SARIMA forecast
 
