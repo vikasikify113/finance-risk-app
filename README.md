@@ -1,6 +1,6 @@
 # AI-Powered Financial Risk and Market Prediction System
 
-A machine learning mini project on 15 NSE-listed stocks (2020 to 2026). It tests whether stock direction can be predicted, forecasts short-term volatility, groups stocks by risk, and backtests a risk-aware strategy. Everything is explorable in a Streamlit dashboard.
+A machine learning mini project for exploring the NIFTY 50. The dashboard provides price and risk analytics, volatility forecasts, walk-forward backtests, five-minute market views, company/sector browsing, and ARIMA/SARIMA demonstrations. Stock prices are downloaded from Yahoo Finance.
 
 > Educational project. Not financial advice.
 
@@ -21,8 +21,10 @@ finance-risk-app/
 │   ├── 3_Market_Chatbot.py
 │   └── 4_ARIMA_Forecast.py
 ├── features.py
+├── stock_universe.py       # Shared NIFTY 50 list and NSE links
 ├── train.py
 ├── data/NIFTY50_demo_sample_5minute.csv
+├── data/nifty50_stocks.csv # 50-stock snapshot with sector and browsing groups
 ├── requirements.txt
 └── README.md
 ```
@@ -65,7 +67,7 @@ python -m streamlit run finance-risk-app.py
 To stop the app, press `Ctrl+C` in the terminal.
 
 ## Using the dashboard
-1. Pick a stock in the sidebar.
+1. Filter the NIFTY 50 list by sector or company group, then choose a company.
 2. **Price & risk** tab: price chart, volatility, VaR, CVaR, max drawdown.
 3. **Volatility forecast** tab: predicted risk for the next 5 days and which inputs the model uses.
 4. **Backtest** tab: buy-and-hold vs the ML risk-aware strategy. Use the slider to change when the strategy moves to cash.
@@ -74,7 +76,9 @@ The first load of each stock takes 10 to 20 seconds (download and model training
 
 ## New analysis pages
 
-The Streamlit sidebar includes **Dataset Analysis**, **Live Market**, **Market Chatbot**, and **ARIMA / SARIMA Forecast** pages. Dataset Analysis uses the small five-session Nifty 50 sample CSV in `data/`; Live Market downloads five-minute quotes from Yahoo Finance and refreshes every five minutes. Both market pages include a link to NSE India. The sample is for demonstrating the data format, not for drawing statistically reliable conclusions.
+The Streamlit sidebar includes **Dataset Analysis**, **Live Market**, **Market Chatbot**, and **ARIMA / SARIMA Forecast** pages. The main risk dashboard, Live Market, ARIMA/SARIMA page, and chatbot share a 50-company NIFTY 50 snapshot in `data/nifty50_stocks.csv`. Update the snapshot from the [official NSE NIFTY 50 page](https://www.nseindia.in/index-tracker/NIFTY%2050) when membership changes. Sector and company group labels are maintained for app filtering and are not official NSE classifications. Live Market also links to official NSE market movers, 52-week highs/lows, and company announcements.
+
+Dataset Analysis uses the small five-session Nifty 50 sample CSV in `data/`; Live Market downloads five-minute quotes from Yahoo Finance and refreshes every five minutes. The sample is for demonstrating the data format, not for drawing statistically reliable conclusions.
 
 ### Market chatbot setup
 

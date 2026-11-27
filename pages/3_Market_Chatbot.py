@@ -9,6 +9,7 @@ import requests
 import streamlit as st
 from google import genai
 from openai import OpenAI
+from stock_universe import NSE_LIVE_MARKET, load_nifty50
 
 st.set_page_config(page_title="Market Chatbot", page_icon="💬")
 st.title("Market Chatbot")
@@ -22,8 +23,9 @@ OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 OLLAMA_BASE_URL = f"{OLLAMA_HOST}/v1"
 GEMINI_MODEL = "gemini-3.8-flash"
 
-NSE_HOME = "https://www.nseindia.com/market-data/live-equity-market"
-NSE_QUOTE = "https://www.nseindia.com/get-quotes/equity?symbol={}"
+NSE_HOME = NSE_LIVE_MARKET
+NSE_QUOTE = "https://www.nseindia.in/get-quotes/equity?symbol={}"
+STOCKS = load_nifty50()
 NSE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/120.0 Safari/537.36",
@@ -37,6 +39,7 @@ STOP_WORDS = {
     "THE", "AND", "FOR", "OF", "TO", "IN", "ON", "CAN", "YOU", "PLEASE",
     "TELL", "ME", "SHOW", "COMPARE", "WITH", "NEWS", "RISK", "ANALYSIS",
     "DOING", "PERFORMANCE", "PERFORM", "LOOKING", "THANKS", "THANK", "HI", "HEY", "HELLO",
+    "COMPANY", "COMPANIES", "SECTOR", "BANKING", "STOCKS", "GOVERNMENT",
 }
 
 
@@ -93,7 +96,18 @@ def get_indices() -> list[dict]:
 
 
 def symbols_in(text: str) -> list[str]:
-    # Uppercase the words so both “reliance” and “RELIANCE” are accepted.
+    # Match the checked-in NIFTY 50 snapshot by ticker or company name.
+    matched = []
+    for row in STOCKS.itertuples(index=False):
+        if any(
+            re.search(rf"(?<![A-Z0-9]){re.escape(value)}(?![A-Z0-9])", text, re.IGNORECASE)
+            for value in (row.symbol, row.company)
+        ):
+            matched.append(row.symbol)
+    if matched:
+        return matched[:3]
+
+    # Keep support for user-entered tickers outside this NIFTY 50 snapshot.
     words = re.findall(r"\b[A-Za-z][A-Za-z0-9&-]{1,14}\b", text)
     return list(dict.fromkeys(word.upper() for word in words if word.upper() not in STOP_WORDS))[:3]
 

@@ -2,6 +2,14 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import yfinance as yf
+from stock_universe import (
+    NSE_52_WEEK,
+    NSE_CORPORATE_FILINGS,
+    NSE_LIVE_MARKET,
+    NSE_NIFTY50,
+    NSE_TOP_MOVERS,
+    load_nifty50,
+)
 
 st.set_page_config(page_title="Live market analysis", layout="wide")
 st.title("Live market analysis")
@@ -11,16 +19,18 @@ st.caption(
 )
 st.link_button(
     "Open NSE India live equity market",
-    "https://www.nseindia.com/market-data/live-equity-market",
+    NSE_LIVE_MARKET,
 )
+with st.expander("More official NSE market tools"):
+    st.link_button("Top gainers and losers", NSE_TOP_MOVERS)
+    st.link_button("52-week highs and lows", NSE_52_WEEK)
+    st.link_button("Company announcements", NSE_CORPORATE_FILINGS)
 
-SYMBOLS = {
+INDEX_SYMBOLS = {
     "Nifty 50": "^NSEI",
     "Bank Nifty": "^NSEBANK",
-    "Reliance Industries": "RELIANCE.NS",
-    "Tata Consultancy Services": "TCS.NS",
-    "HDFC Bank": "HDFCBANK.NS",
 }
+STOCKS = load_nifty50()
 
 
 @st.cache_data(ttl=60, max_entries=10, show_spinner="Fetching five-minute market data…")
@@ -71,7 +81,33 @@ def calculate_rsi(close: pd.Series, window: int = 14) -> pd.Series:
 
 with st.sidebar:
     st.subheader("Market")
-    instrument = st.selectbox("Instrument", list(SYMBOLS))
+    market_type = st.radio("Choose a list", ["NIFTY 50 stocks", "Indices"])
+    if market_type == "Indices":
+        instrument = st.selectbox("Index", list(INDEX_SYMBOLS))
+        symbol = INDEX_SYMBOLS[instrument]
+    else:
+        sector = st.selectbox("Sector", ["All sectors", *sorted(STOCKS["sector"].unique())])
+        group = st.selectbox(
+            "Company group",
+            ["All company groups", *sorted(STOCKS["company_group"].unique())],
+        )
+        choices = STOCKS.copy()
+        if sector != "All sectors":
+            choices = choices[choices["sector"] == sector]
+        if group != "All company groups":
+            choices = choices[choices["company_group"] == group]
+        if choices.empty:
+            st.info("No stocks match both filters. Choose another sector or company group.")
+            st.stop()
+        selected_stock = st.selectbox(
+            "Company",
+            choices.to_dict("records"),
+            format_func=lambda item: f"{item['company']} ({item['symbol']})",
+        )
+        instrument = f"{selected_stock['company']} ({selected_stock['symbol']})"
+        symbol = selected_stock["yahoo_ticker"]
+        st.caption("NIFTY 50 membership snapshot: 26 Nov 2026. Yahoo Finance prices may be delayed.")
+        st.link_button("Open NSE NIFTY 50 constituents", NSE_NIFTY50)
     visible_range = st.selectbox("Chart range", ["1 day", "5 days", "1 month", "3 months"], index=1)
     if st.button("Refresh data now", icon=":material/refresh:"):
         get_intraday.clear()
@@ -160,4 +196,4 @@ def show_live_analysis(symbol: str, name: str, selected_range: str) -> None:
         st.dataframe(recent, hide_index=True, alt=f"Latest 30 five-minute bars for {name}")
 
 
-show_live_analysis(SYMBOLS[instrument], instrument, visible_range)
+show_live_analysis(symbol, instrument, visible_range)

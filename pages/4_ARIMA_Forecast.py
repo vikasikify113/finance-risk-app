@@ -3,6 +3,7 @@
 import pandas as pd
 import streamlit as st
 import yfinance as yf
+from stock_universe import load_nifty50
 
 st.set_page_config(page_title="ARIMA / SARIMA Forecast", page_icon="📈", layout="wide")
 
@@ -19,18 +20,7 @@ st.caption(
     "promises of future prices or investment advice."
 )
 
-NSE_TICKERS = {
-    "RELIANCE": "RELIANCE.NS",
-    "TCS": "TCS.NS",
-    "INFY": "INFY.NS",
-    "HDFCBANK": "HDFCBANK.NS",
-    "ICICIBANK": "ICICIBANK.NS",
-    "SBIN": "SBIN.NS",
-    "ITC": "ITC.NS",
-    "WIPRO": "WIPRO.NS",
-    "LT": "LT.NS",
-    "MARUTI": "MARUTI.NS",
-}
+STOCKS = load_nifty50()
 
 
 @st.cache_data(ttl=900, show_spinner="Downloading daily prices from Yahoo Finance…")
@@ -60,9 +50,15 @@ def load_daily_prices(yahoo_ticker: str) -> pd.Series:
 
 
 with st.sidebar:
-    selected_symbol = st.selectbox("NSE symbol", list(NSE_TICKERS))
+    sector = st.selectbox("Filter by sector", ["All sectors", *sorted(STOCKS["sector"].unique())])
+    choices = STOCKS if sector == "All sectors" else STOCKS[STOCKS["sector"] == sector]
+    selected_stock = st.selectbox(
+        "NIFTY 50 company",
+        choices.to_dict("records"),
+        format_func=lambda item: f"{item['company']} ({item['symbol']})",
+    )
     custom_symbol = st.text_input("Or enter another Yahoo Finance symbol", placeholder="e.g. ADANIENT.NS")
-    yahoo_ticker = custom_symbol.strip().upper() if custom_symbol.strip() else NSE_TICKERS[selected_symbol]
+    yahoo_ticker = custom_symbol.strip().upper() if custom_symbol.strip() else selected_stock["yahoo_ticker"]
     horizon = st.slider("Forecast trading days", min_value=1, max_value=30, value=10)
     model_choice = st.radio("Model", ["ARIMA", "SARIMA"], horizontal=True)
     order_p = st.select_slider("ARIMA p", options=[0, 1, 2, 3], value=1)
