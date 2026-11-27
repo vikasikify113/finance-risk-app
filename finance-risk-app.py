@@ -4,12 +4,11 @@ import yfinance as yf
 import streamlit as st
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import TimeSeriesSplit
+from stock_universe import NSE_NIFTY50, load_nifty50
 
 st.set_page_config(page_title="Financial Risk & Market Prediction", layout="wide")
 
-TICKERS = ["INFY.NS", "TCS.NS", "WIPRO.NS", "HCLTECH.NS", "HDFCBANK.NS", "ICICIBANK.NS",
-           "SBIN.NS", "AXISBANK.NS", "RELIANCE.NS", "ITC.NS", "HINDUNILVR.NS", "LT.NS",
-           "MARUTI.NS", "SUNPHARMA.NS", "TATASTEEL.NS"]
+STOCKS = load_nifty50()
 FEATURES = ["Vol5", "Volatility", "Vol20", "AbsReturn", "MA20_ratio", "RSI"]
 RISK_FREE = 0.06
 
@@ -96,7 +95,29 @@ def backtest(ticker, q):
 st.title("AI-Powered Financial Risk and Market Prediction System")
 st.caption("Educational project, not financial advice.")
 
-ticker = st.sidebar.selectbox("Choose a stock", TICKERS)
+sector_options = ["All sectors", *sorted(STOCKS["sector"].unique())]
+selected_sector = st.sidebar.selectbox("Filter by sector", sector_options)
+group_options = ["All company groups", *sorted(STOCKS["company_group"].unique())]
+selected_group = st.sidebar.selectbox("Filter by company group", group_options)
+available = STOCKS.copy()
+if selected_sector != "All sectors":
+    available = available[available["sector"] == selected_sector]
+if selected_group != "All company groups":
+    available = available[available["company_group"] == selected_group]
+if available.empty:
+    st.sidebar.info("No companies match both filters. Choose another sector or company group.")
+    st.stop()
+selected_stock = st.sidebar.selectbox(
+    "Choose a NIFTY 50 company",
+    available.to_dict("records"),
+    format_func=lambda item: f"{item['company']} ({item['symbol']})",
+)
+st.sidebar.caption(
+    f"{len(STOCKS)} NIFTY 50 stocks · list snapshot: 26 Nov 2026. "
+    "Sector and company group labels are for browsing and are not NSE classifications."
+)
+st.sidebar.link_button("View NIFTY 50 on NSE India", NSE_NIFTY50)
+ticker = selected_stock["yahoo_ticker"]
 q = st.sidebar.slider("Go to cash when predicted risk is above this percentile",
                       0.50, 0.90, 0.70, 0.05)
 
@@ -109,7 +130,7 @@ r = df["Close"].pct_change().dropna()
 tab1, tab2, tab3 = st.tabs(["Price & risk", "Volatility forecast", "Backtest"])
 
 with tab1:
-    st.subheader(f"{ticker} closing price")
+    st.subheader(f"{selected_stock['company']} ({selected_stock['symbol']}) closing price")
     st.line_chart(df["Close"])
     m = risk_metrics(r)
     c = st.columns(4)

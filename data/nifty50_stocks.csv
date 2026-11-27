@@ -1,0 +1,51 @@
+symbol,company,sector,company_group,yahoo_ticker
+ADANIENT,Adani Enterprises,Industrials,Private / Other,ADANIENT.NS
+ADANIPORTS,Adani Ports and Special Economic Zone,Industrials,Private / Other,ADANIPORTS.NS
+APOLLOHOSP,Apollo Hospitals Enterprise,Healthcare,Private / Other,APOLLOHOSP.NS
+ASIANPAINT,Asian Paints,Consumer Durables,Private / Other,ASIANPAINT.NS
+AXISBANK,Axis Bank,Financial Services,Private / Other,AXISBANK.NS
+BAJAJ-AUTO,Bajaj Auto,Automobile,Private / Other,BAJAJ-AUTO.NS
+BAJAJFINSV,Bajaj Finserv,Financial Services,Private / Other,BAJAJFINSV.NS
+BAJFINANCE,Bajaj Finance,Financial Services,Private / Other,BAJFINANCE.NS
+BEL,Bharat Electronics,Industrials,Government / PSU,BEL.NS
+BHARTIARTL,Bharti Airtel,Telecommunication,Private / Other,BHARTIARTL.NS
+BSE,BSE,Financial Services,Private / Other,BSE.NS
+CIPLA,Cipla,Healthcare,Private / Other,CIPLA.NS
+COALINDIA,Coal India,Energy,Government / PSU,COALINDIA.NS
+DRREDDY,Dr. Reddy's Laboratories,Healthcare,Private / Other,DRREDDY.NS
+EICHERMOT,Eicher Motors,Automobile,Private / Other,EICHERMOT.NS
+ETERNAL,Eternal,Consumer Services,Private / Other,ETERNAL.NS
+GRASIM,Grasim Industries,Materials,Private / Other,GRASIM.NS
+HCLTECH,HCL Technologies,Information Technology,Private / Other,HCLTECH.NS
+HDFCBANK,HDFC Bank,Financial Services,Private / Other,HDFCBANK.NS
+HDFCLIFE,HDFC Life Insurance Company,Financial Services,Private / Other,HDFCLIFE.NS
+HINDALCO,Hindalco Industries,Metals and Mining,Private / Other,HINDALCO.NS
+HINDUNILVR,Hindustan Unilever,Fast Moving Consumer Goods,MNC,HINDUNILVR.NS
+ICICIBANK,ICICI Bank,Financial Services,Private / Other,ICICIBANK.NS
+INDIGO,InterGlobe Aviation,Consumer Services,Private / Other,INDIGO.NS
+INFY,Infosys,Information Technology,Private / Other,INFY.NS
+ITC,ITC,Fast Moving Consumer Goods,Private / Other,ITC.NS
+JIOFIN,Jio Financial Services,Financial Services,Private / Other,JIOFIN.NS
+JSWSTEEL,JSW Steel,Metals and Mining,Private / Other,JSWSTEEL.NS
+KOTAKBANK,Kotak Mahindra Bank,Financial Services,Private / Other,KOTAKBANK.NS
+LT,Larsen and Toubro,Industrials,Private / Other,LT.NS
+M&M,Mahindra and Mahindra,Automobile,Private / Other,M&M.NS
+MARUTI,Maruti Suzuki India,Automobile,MNC,MARUTI.NS
+MAXHEALTH,Max Healthcare Institute,Healthcare,Private / Other,MAXHEALTH.NS
+NESTLEIND,Nestle India,Fast Moving Consumer Goods,MNC,NESTLEIND.NS
+NTPC,NTPC,Energy,Government / PSU,NTPC.NS
+ONGC,Oil and Natural Gas Corporation,Energy,Government / PSU,ONGC.NS
+POWERGRID,Power Grid Corporation of India,Utilities,Government / PSU,POWERGRID.NS
+RELIANCE,Reliance Industries,Energy,Private / Other,RELIANCE.NS
+SBILIFE,SBI Life Insurance Company,Financial Services,Private / Other,SBILIFE.NS
+SBIN,State Bank of India,Financial Services,Government / PSU,SBIN.NS
+SHRIRAMFIN,Shriram Finance,Financial Services,Private / Other,SHRIRAMFIN.NS
+SUNPHARMA,Sun Pharmaceutical Industries,Healthcare,Private / Other,SUNPHARMA.NS
+TATACONSUM,Tata Consumer Products,Fast Moving Consumer Goods,Private / Other,TATACONSUM.NS
+TATASTEEL,Tata Steel,Metals and Mining,Private / Other,TATASTEEL.NS
+TCS,Tata Consultancy Services,Information Technology,Private / Other,TCS.NS
+TECHM,Tech Mahindra,Information Technology,Private / Other,TECHM.NS
+TITAN,Titan Company,Consumer Durables,Private / Other,TITAN.NS
+TMPV,Tata Motors Passenger Vehicles,Automobile,Private / Other,TMPV.NS
+TRENT,Trent,Consumer Services,Private / Other,TRENT.NS
+ULTRACEMCO,UltraTech Cement,Materials,Private / Other,ULTRACEMCO.NS
